@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cookie Consent Form</title>
+        <!-- Include jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Include js-cookie library -->
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/dist/js.cookie.min.js"></script>
+    </head>
+    <body>
+        <!-- Consent Form -->
+        <div id="consent-form" style="display: none;">
+            <h2>Our use of cookies</h2>
+            <p>We would like to use cookies to improve your browsing experience. Please choose one of the following:</p>
+            <button id="accept-all">Accept All Cookies</button>
+            <button id="accept-essential">Accept Essential Cookies Only</button>
+            <button id="decline">Decline All Cookies</button>
+        </div>
+
+        <script>
+            // Check if the user has already given their consent
+            if (!Cookies.get('consent')) {
+                // If not, show the consent form
+                $('#consent-form').show();
+            }
+
+            // When the user gives their consent, store it in a cookie and hide the form
+            $('#accept-all').click(function() {
+                Cookies.set('consent', 'all');
+                $('#consent-form').hide();
+            });
+
+            $('#accept-essential').click(function() {
+                Cookies.set('consent', 'essential');
+                $('#consent-form').hide();
+            });
+
+            // If the user declines, store their choice and redirect them to the homepage
+            $('#decline').click(function() {
+                Cookies.set('consent', 'none');
+                $('#consent-form').hide();
+                window.location.href = "/"; // Replace "/" with your homepage URL
+            });
+
+            // If the user has declined cookies and tries to access a page other than the homepage, redirect them back
+            if (Cookies.get('consent') === 'none' && window.location.pathname !== '/') {
+                window.location.href = "/"; // Replace "/" with your homepage URL
+            }
+        </script>
+    </body>
+</html>
