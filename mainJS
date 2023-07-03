@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cookie and User Information Tracker</title>
+        <!-- Include jQuery for easier AJAX and DOM manipulation -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Include js-cookie library for easier cookie handling -->
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/dist/js.cookie.min.js"></script>
+    </head>
+    <body>
+        <!-- Simple form for demonstration purposes -->
+        <form id="form">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username"><br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <script>
+            // 1. Track all the cookies the user is currently encountering
+            // Note that cookies are domain-specific, so this will only get cookies from your domain
+            let cookies = document.cookie;
+
+            // 2. Track the user's country location
+            // Use the ipapi service to get location data from the user's IP
+            // You'll need to sign up for this service and get an access key
+            // Once you have an access key, replace "YOUR_ACCESS_KEY" with it
+            $.getJSON("https://api.ipapi.com/check?access_key=YOUR_ACCESS_KEY", function(data) {
+                // Get the country from the returned data and store it in a cookie
+                let country = data.country_name;
+                Cookies.set('country', country);
+            });
+
+            // 3. Track which internet explorer the user is on
+            // Use the userAgent property of the navigator object to get info on the user's browser
+            let browser = navigator.userAgent;
+            Cookies.set('browser', browser);
+
+            // 4. Track the user's internet speed and performance
+            // Load an image and time how long it takes to get a rough estimate of the user's internet speed
+            var imageAddr = "https://www.google.com/images/phd/px.gif"; 
+            var startTime, endTime;
+            var downloadSize = 499537;
+
+            var download = new Image();
+            download.onload = function () {
+                // When the image finishes loading, record the end time and calculate the speed
+                endTime = (new Date()).getTime();
+                showResults();
+            }
+
+            startTime = (new Date()).getTime();
+            download.src = imageAddr;
+
+            function showResults() {
+                // Calculate the speed based on the size of the image and how long it took to download
+                var duration = (endTime - startTime) / 1000;
+                var bitsLoaded = downloadSize * 8;
+                var speedBps = (bitsLoaded / duration).toFixed(2);
+                var speedKbps = (speedBps / 1024).toFixed(2);
+                Cookies.set('internet_speed', speedKbps + ' Kbps');
+            }
+
+            // 5. Check to see if the user has any extensions or ad-blockers
+            // Create a fake ad and see if it gets hidden to guess if the user has an ad blocker
+            // This won't catch all ad blockers, but it's a simple check
+            var testAd = document.createElement('div');
+            testAd.innerHTML = '&nbsp;';
+            testAd.className = 'adsbox';
+            document.body.appendChild(testAd);
+            window.setTimeout(function() {
+                if (testAd.offsetHeight === 0) {
+                    Cookies.set('adblock', 'yes');
+                }
+                testAd.remove();
+            }, 100);
+
+            // 6. Store relevant information that they have entered into the website
+            // In this case, we're storing the username
+            // You can add more fields to the form and store them in a similar way
+            $('#form').submit(function(e) {
+                // Prevent the form from actually submitting so the page doesn't reload
+                e.preventDefault();
+                let username = $('#username').val();
+                Cookies.set('username', username);
+            });
+        </script>
+    </body>
+</html>
