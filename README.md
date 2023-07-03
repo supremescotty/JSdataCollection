@@ -13,5 +13,5 @@ Browser Compatibility: While the script uses fairly standard JavaScript and shou
 Potential for Abuse: Be careful with scripts like this, as they can easily be abused for malicious purposes. Always use these tools responsibly and ethically.
 
 
-NOTE: For userAgreement section
+NOTE: For userAgreementPrompt section
 In this code, the consent form is hidden by default and only shown if the user hasn't already given their consent. When the user clicks one of the buttons, their choice is stored in a cookie and the form is hidden. If the user chooses to decline all cookies, they are redirected to the homepage. After that, if they try to access any other page, they are redirected back to the homepage. This is a basic implementation.
